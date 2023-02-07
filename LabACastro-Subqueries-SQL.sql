@@ -140,3 +140,14 @@ HAVING total_amount_spent >
 		)
 ORDER BY total_amount_spent DESC
 ;
+
+SELECT avg(total)
+		FROM
+			(SELECT  SUM(amount) as total
+					FROM customer
+					JOIN payment
+						ON payment.customer_id = customer.customer_id
+					GROUP BY customer.customer_id
+					ORDER BY total DESC
+			)
+;
