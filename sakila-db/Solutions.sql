@@ -78,10 +78,7 @@ SELECT title FROM film
 
 -- 8. Get the client_id and the total_amount_spent of those clients who spent more than the average of the total_amount spent by each client.
 
--- client_id + the total_amount_spent spent more
-
--- average of the total_amount spent by each client
-SELECT payment.customer_id, sum(amount)
-  			FROM payment
-  			GROUP BY customer_id
-  			ORDER BY sum(amount)DESC
+SELECT customer_id, sumn FROM (SELECT customer_id, sum(amount) AS sumn FROM payment GROUP BY customer_id) as outer_query
+WHERE sumn>
+(SELECT AVG(asset_sums)	FROM(SELECT customer_id, SUM(amount) AS asset_sums FROM payment GROUP BY customer_id) as inner_query)
+group by customer_id;
