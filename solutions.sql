@@ -1,3 +1,5 @@
+-- SOLUTIONS FILE
+
 -- 1. How many copies of the film _Hunchback Impossible_ exist in the inventory system?
 USE SAKILA;
 SELECT *
@@ -85,4 +87,20 @@ SELECT title
     LIMIT 1); 
 
 -- 7. Films rented by most profitable customer. You can use the customer table and payment table to find the most profitable customer ie the customer that has made the largest sum of payments
+SELECT film.title
+	FROM film
+    JOIN inventory
+		ON film.film_id = inventory.film_id
+	JOIN rental
+		ON inventory.inventory_id = rental.inventory_id
+	JOIN customer
+		ON rental.customer_id = customer.customer_id
+	WHERE customer.customer_id = 
+
+(SELECT customer_id
+	FROM payment
+    GROUP BY customer_id
+    ORDER BY SUM(amount) DESC
+    LIMIT 1);
+
 -- 8. Get the `client_id` and the `total_amount_spent` of those clients who spent more than the average of the `total_amount` spent by each client.
