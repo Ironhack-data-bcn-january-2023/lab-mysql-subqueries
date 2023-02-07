@@ -69,3 +69,14 @@ SELECT title
 
 -- 7 Films rented by most profitable customer. You can use the customer table and payment table to find the 
     --most profitable customer ie the customer that has made the largest sum of payments.
+select distinct title
+	from film
+    join inventory
+		on film.film_id = inventory.film_id
+	join rental 
+		on inventory.inventory_id = rental.inventory_id
+            where rental.customer_id = (select customer_id
+			    from payment
+				    group by customer_id
+                    order by sum(amount) desc
+                    limit 1);
