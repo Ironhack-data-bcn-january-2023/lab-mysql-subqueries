@@ -122,11 +122,9 @@ ORDER BY title
 
 -- 8. Get the client_id and the total_amount_spent of those clients who spent more than the average of the total_amount spent by each client.
 
-SELECT  customer.customer_id, SUM(amount) as total_amount_spent
-FROM customer
-JOIN payment
-	ON payment.customer_id = customer.customer_id
-GROUP BY customer.customer_id
+SELECT  customer_id, SUM(amount) as total_amount_spent
+FROM payment
+GROUP BY customer_id
 HAVING total_amount_spent > 
 		(SELECT avg(total)
 		FROM
@@ -136,18 +134,7 @@ HAVING total_amount_spent >
 						ON payment.customer_id = customer.customer_id
 					GROUP BY customer.customer_id
 					ORDER BY total DESC
-			) as client_spending
+			) AS client_spending
 		)
 ORDER BY total_amount_spent DESC
-;
-
-SELECT avg(total)
-		FROM
-			(SELECT  SUM(amount) as total
-					FROM customer
-					JOIN payment
-						ON payment.customer_id = customer.customer_id
-					GROUP BY customer.customer_id
-					ORDER BY total DESC
-			)
 ;
