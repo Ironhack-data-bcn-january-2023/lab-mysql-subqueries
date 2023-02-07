@@ -1,16 +1,18 @@
 USE sakila;
+
+## Problem 1
 SELECT count(inventory_id)
 	FROM inventory
     JOIN film
 		ON film.film_id=inventory.film_id
         WHERE film.title="Hunchback Impossible"   
 ;
-
+## Problem 2
 SELECT title
 	FROM film
     WHERE film.length > (select avg(length) from film)
 ;
-
+## Problem 3
 SELECT actor.first_name, actor.last_name
 FROM actor
 WHERE actor.actor_id IN (
@@ -22,7 +24,7 @@ WHERE actor.actor_id IN (
         WHERE film.title = "Alone Trip"
     )
 );
-
+## Problem 4
 SELECT title
 	FROM film
     JOIN film_category AS cat
@@ -31,7 +33,7 @@ SELECT title
 		ON category.category_id=cat.category_id
 	WHERE category.name="Family"   
 ;
-
+## Problem 5
 SELECT first_name, last_name
 	FROM customer
     JOIN address
@@ -57,35 +59,39 @@ WHERE address_id IN (
         )
     )
 );
-
-SELECT actor_id, count(film_id)
+## Problem 6
+SELECT actor_id
 	FROM film_actor
 	GROUP BY actor_id
 	ORDER BY count(film_id) DESC
     LIMIT 1;
-	
+
+
 SELECT title
 	FROM film
     JOIN film_actor
 		ON film.film_id=film_actor.film_id
-	WHERE actor_id=107
+	WHERE actor_id=(SELECT actor_id
+	FROM film_actor
+	GROUP BY actor_id
+    order by count(film_id) DESC
+    LIMIT 1)
     ;
 
-SELECT customer_id, sum(amount)
-	FROM payment
-	GROUP BY customer_id
-	ORDER BY sum(amount) DESC
-    LIMIT 1;
-
+## Problem 7
 SELECT distinct title
 	FROM film
     JOIN inventory
 		ON inventory.film_id=film.film_id
 	JOIN rental
 		ON inventory.inventory_id=rental.inventory_id
-	WHERE rental.customer_id=526
+	WHERE rental.customer_id = (SELECT customer_id
+	FROM payment
+	GROUP BY customer_id
+	ORDER BY sum(amount) DESC
+    LIMIT 1)
     ;
-
+## Problem 8
 SELECT  customer_id, SUM(amount) as total_amount_spent
 FROM payment
 GROUP BY customer_id
@@ -101,4 +107,4 @@ HAVING total_amount_spent >
 			) AS client_spending
 		)
 ORDER BY total_amount_spent DESC
-;
+
