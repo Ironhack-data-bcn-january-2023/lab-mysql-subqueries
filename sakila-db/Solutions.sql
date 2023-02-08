@@ -81,4 +81,5 @@ SELECT title FROM film
 SELECT customer_id, sumn FROM (SELECT customer_id, sum(amount) AS sumn FROM payment GROUP BY customer_id) as outer_query
 WHERE sumn>
 (SELECT AVG(asset_sums)	FROM(SELECT customer_id, SUM(amount) AS asset_sums FROM payment GROUP BY customer_id) as inner_query)
-group by customer_id;
+group by customer_id
+order by sumn desc ;
